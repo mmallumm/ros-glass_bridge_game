@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.0.2)
 project(kalmar_bridge)
 
 set(SERVER_NAME "server")
+set(CLIENT_NAME "client")
 
-set(BRIDGE_SOURCES src/kalmar_bridge.cpp)
-set(BRIDGE_HEADERS src/kalmar_bridge.h)
+set(BRIDGE_SOURCES src/game.cpp)
+set(BRIDGE_HEADERS include/game.h)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -61,7 +62,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  KalmarBridge.srv
+  BridgeService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -146,7 +147,8 @@ target_link_libraries(BRIDGE
   ${catkin_LIBRARIES}
 )
 
-add_executable(${SERVER_NAME} src/kalmar_bridge_server.cpp)
+add_executable(${SERVER_NAME} src/server.cpp)
+add_executable(${CLIENT_NAME} src/client.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,6 +162,11 @@ add_executable(${SERVER_NAME} src/kalmar_bridge_server.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${SERVER_NAME}
+  ${catkin_LIBRARIES}
+  BRIDGE
+)
+
+target_link_libraries(${CLIENT_NAME}
   ${catkin_LIBRARIES}
   BRIDGE
 )
