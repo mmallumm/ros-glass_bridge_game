@@ -16,8 +16,12 @@ void publish_message(char input) {
 
 bool service_handler(kalmar_bridge::BridgeService::Request &req,
                      kalmar_bridge::BridgeService::Response &res) {
-  bool result = game.Play(req.step_cell, res.response);
-  publish_message(req.step_cell);
+  if(req.step_cell.empty()) {
+    return false;
+  }              
+  char input = req.step_cell[0];        
+  bool result = game.Play(input, res.response);
+  publish_message(input);
 
   return result;
 }
